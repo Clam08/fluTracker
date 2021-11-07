@@ -71,10 +71,10 @@
 					// console.log(age0_4.toString());
 
 					const age_data = [age0_4, age5_24, age25_49, age50_64, age65p];
-
-					return age_data;
+					
 					
 					document.getElementById("data").innerHTML = report;
+					return age_data;
 				}
 				else if (request.readyState == 4 && request.status != 200) {
 
@@ -89,23 +89,27 @@
 				}
 
 			}
-
 			
-		// Step 4: fire off the HTTP request
+			// Step 4: fire off the HTTP request
 			request.send();
 			console.log("4 - Request sent");
 		}
 	</script>
 </head>
 
-<body style="width: 65%; margin: auto;">
+<body style="width: 65%; margin: auto;" onload="secondFunction()">
 	<canvas id="myChart" style="width:100%;max-width:700px"></canvas>
 
 	<script> // we might want the script to be the main that call functions
 		// call function to get data
-		
-		let age_data = getDate();
-		// console.log(age_data);
+
+		const secondFunction = async () => {
+			console.log("begin");
+			const age_data = await getDate();
+			// do something else here after firstFunction completes
+			console.log("done");
+		}
+				
 
 		var xyValues = [
 			{x:1, y:2466},
