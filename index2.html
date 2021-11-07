@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+	<title> COVID-19 US</title>
+	<meta charset="utf-8"/>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
+
+<body style="width: 65%; margin: auto;" >
+	<!-- onload="getDate()" -->
+	<canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+
+	<script>
+		request = new XMLHttpRequest();
+		console.log("1 - request object created");
+
+		// Step 2: Set the URL for the AJAX request to be the JSON file
+
+		request.open("GET", "https://disease.sh/v3/influenza/cdc/ILINet", true)
+		console.log("2 - opened request file");
+
+		// Step 3: set up event handler/callback
+
+		
+		console.log("3 - readystatechange event fired.");
+
+		if (request.readyState == 4 && request.status == 200) {
+
+			// Step 5: wait for done + success
+			console.log("5 - response received");
+			result = request.responseText;
+
+			// document.write(result);
+
+			flu_data = JSON.parse(result);
+			console.log(flu_data);
+
+			newest = flu_data['data'].length;
+			console.log("newest",+ newest);
+			
+			// const age0_4 = [];
+			// const age5_24 = [];
+			// const age25_49 = [];
+			// const age50_64 = [];
+			// const age65p = [];
+
+			let age0_4 = new Array(newest);
+			let age5_24 = new Array(newest);
+			let age25_49 = new Array(newest);
+			let age50_64 = new Array(newest);
+			let age65p = new Array(newest);
+
+			report = "Total number of flu nums in recent 5 weeks are: <br>";
+			for (i = 0 ; i < newest; i ++) {
+				// console.log(flu_data['data'][i]['week']);
+				// console.log(flu_data['data'][i]['age 0-4']);
+				// console.log(flu_data['data'][i]['age 5-24']);
+				// console.log(flu_data['data'][i]['age 25-49']);
+				// console.log(flu_data['data'][i]['age 50-64']);
+				// console.log(flu_data['data'][i]['age 65+']);
+
+				age0_4[i] = flu_data['data'][i]['age 0-4'];
+				age5_24[i] = flu_data['data'][i]['age 5-24'];
+				age25_49[i] = flu_data['data'][i]['age 25-49'];
+				age50_64[i] = flu_data['data'][i]['age 50-64'];
+				age65p[i] = flu_data['data'][i]['age 65+'];
+
+				// report += flu_data[i]["Date"]
+				//  + ": " + flu_data[i]["Cases"] + "<br>";
+			}
+		}else if (request.readyState == 4 && request.status != 200) {
+
+			document.getElementById("data").innerHTML = "Something is wrong!  Check the logs to see where this went off the rails";
+
+		}
+
+		else if (request.readyState == 3) {
+
+			document.getElementById("data").innerHTML = "Too soon!  Try again";
+
+		}
+		
+		
+
+		var xyValues = [
+			{x:50, y:7},
+			{x:60, y:8},
+			{x:70, y:8},
+			{x:80, y:9},
+			{x:90, y:9},
+			{x:100, y:9},
+			{x:110, y:10},
+			{x:120, y:11},
+			{x:130, y:14},
+			{x:140, y:14},
+			{x:150, y:15}
+		];
+
+		new Chart("myChart", {
+			type: "scatter",
+			data: {
+				datasets: [{
+				pointRadius: 4,
+				pointBackgroundColor: "rgb(0,0,255)",
+				data: xyValues
+				}]
+			},
+			options: {
+				legend: {display: false},
+				scales: {
+				xAxes: [{ticks: {min: 40, max:160}}],
+				yAxes: [{ticks: {min: 6, max:16}}],
+				}
+			}
+		});
+	</script>
+
+	<h1>COVID-19 Cases Confirmed in US</h1>
+	<div style="border: double; padding: 10px;" id="data">Loading...</div>
+	<br>
+		<p>The API gives information regarding the total COVID-19 confirmed cases in the US up to date.
+	<br>
+	This is the url to the website: https://documenter.getpostman.com/view/10808728/SzS8rjbc#4bad095c-e106-4eb1-9498-ec5954d2165d
+	<br>
+	The options used for the API request is GET. It can sent the query strings when requesting.
+	<br>
+	This API would be helpful to track COVID-19 cases in US for curious
+	individuals or indicators for the extend of COVID precaution implementation. </p>
+
+</body>
+
+</html>
